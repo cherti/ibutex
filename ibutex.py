@@ -10,7 +10,7 @@ parser.add_argument('-c', '--clean', action="store_true", dest='cleanbuild', def
 parser.add_argument('-q', '--quick', action="store_true", dest='quick', default=False, help='quick build, single run')
 parser.add_argument('-m', '--material', action="store", dest='materialdir', default='img', help='directory containing material like images')
 parser.add_argument('-s', '--sections', action="store", dest='sectiondir', default='sections', help='directory containing sections or chapters if singled out')
-#parser.add_argument('-a', action="store_true", default=False)
+parser.add_argument('--build-only', action="store_false", dest='showpdf', default=True, help='show the compiled documend afterwards')
 
 args = parser.parse_args()
 
@@ -28,11 +28,13 @@ else:
 if len(texfiles) < 1:
 	print(':: no *.tex-files found for compilation')
 
-if args.cleanbuild:
-	os.remove('.texbuild')
+builddir '.texbuild-' + texfile
 
-os.makedirs('.texbuild', exist_ok=True)
-os.chdir('.texbuild')
+if args.cleanbuild:
+	os.remove(builddir)
+
+os.makedirs(builddir, exist_ok=True)
+os.chdir(builddir)
 if not os.path.islink(args.materialdir):
 	os.symlink('../{}'.format(args.materialdir), args.materialdir)
 if args.sectiondir and not os.path.islink(args.sectiondir):
@@ -41,12 +43,18 @@ if args.sectiondir and not os.path.islink(args.sectiondir):
 fullcmd = latexbase + ['../' + texfile]
 fullbib = bibtexbase + ['../' + texfile]
 
-subprocess.call(fullcmd)
+rv = subprocess.call(fullcmd)
+if rv != 0:
+	print(":: error compiling")
+	exit(1)
 
 if not args.quick:
 	subprocess.call(fullbib)
 	subprocess.call(fullcmd)
 	subprocess.call(fullcmd)
 
-name = texfile[:-4] + '.pdf'
-shutil.copy(name, '../' + name)
+pdffile = texfile[:-4] + '.pdf'
+shutil.copy(pdffile, '../' + pdffile)
+
+if args.showpdf:
+	subprocess.call(['zathura', pdffile])
