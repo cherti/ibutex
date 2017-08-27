@@ -30,7 +30,7 @@ if len(texfiles) < 1:
 
 builddir '.texbuild-' + texfile
 
-if args.cleanbuild:
+if args.cleanbuild and os.path.exists(builddir):
 	os.remove(builddir)
 
 os.makedirs(builddir, exist_ok=True)
