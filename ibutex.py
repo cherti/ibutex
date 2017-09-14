@@ -28,7 +28,7 @@ else:
 if len(texfiles) < 1:
 	print(':: no *.tex-files found for compilation')
 
-builddir '.texbuild-' + texfile
+builddir = '.texbuild-' + texfile
 
 if args.cleanbuild and os.path.exists(builddir):
 	os.remove(builddir)
