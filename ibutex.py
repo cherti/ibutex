@@ -7,7 +7,7 @@ bibtexbase = ['bibtex']
 
 parser = argparse.ArgumentParser(description='IbuTex - LaTeX-tooling to reduce pain')
 parser.add_argument('-c', '--clean', action="store_true", dest='cleanbuild', default=False, help='clean build, remove temporary and cached data before')
-parser.add_argument('-q', '--quick', action="store_true", dest='quick', default=False, help='quick build, single run')
+parser.add_argument('-f', '--full', action="store_true", dest='full', default=False, help='full build, multiple runs of latex + bibtex')
 parser.add_argument('-m', '--material', action="store", dest='materialdir', default='img', help='directory containing material like images')
 parser.add_argument('-s', '--sections', action="store", dest='sectiondir', default='sections', help='directory containing sections or chapters if singled out')
 parser.add_argument('--build-only', action="store_false", dest='showpdf', default=True, help='show the compiled documend afterwards')
@@ -48,7 +48,7 @@ if rv != 0:
 	print(":: error compiling")
 	exit(1)
 
-if not args.quick:
+if args.full:
 	subprocess.call(fullbib)
 	subprocess.call(fullcmd)
 	subprocess.call(fullcmd)
