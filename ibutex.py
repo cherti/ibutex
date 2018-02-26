@@ -28,13 +28,11 @@ else:
 if len(texfiles) < 1:
 	print(':: no *.tex-files found for compilation')
 
-builddir = '.texbuild-' + texfile
+if args.cleanbuild:
+	os.remove('.texbuild')
 
-if args.cleanbuild and os.path.exists(builddir):
-	os.remove(builddir)
-
-os.makedirs(builddir, exist_ok=True)
-os.chdir(builddir)
+os.makedirs('.texbuild', exist_ok=True)
+os.chdir('.texbuild')
 if not os.path.islink(args.materialdir):
 	os.symlink('../{}'.format(args.materialdir), args.materialdir)
 if args.sectiondir and not os.path.islink(args.sectiondir):
