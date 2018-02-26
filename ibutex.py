@@ -10,6 +10,7 @@ parser.add_argument('-c', '--clean', action="store_true", dest='cleanbuild', def
 parser.add_argument('-f', '--full', action="store_true", dest='full', default=False, help='full build, multiple runs of latex + bibtex')
 parser.add_argument('-m', '--material', action="store", dest='materialdir', default='img', help='directory containing material like images')
 parser.add_argument('-s', '--sections', action="store", dest='sectiondir', default='sections', help='directory containing sections or chapters if singled out')
+parser.add_argument('-b', '--bibfile', action="store", dest='bibfile', default='bibfile.bib', help='bibliography file')
 parser.add_argument('--build-only', action="store_false", dest='showpdf', default=True, help='show the compiled documend afterwards')
 
 args = parser.parse_args()
@@ -37,9 +38,11 @@ if not os.path.islink(args.materialdir):
 	os.symlink('../{}'.format(args.materialdir), args.materialdir)
 if args.sectiondir and not os.path.islink(args.sectiondir):
 	os.symlink('../{}'.format(args.sectiondir), args.sectiondir)
+if args.bibfile and not os.path.islink(args.bibfile):
+	os.symlink('../{}'.format(args.bibfile), args.bibfile)
 
 fullcmd = latexbase + ['../' + texfile]
-fullbib = bibtexbase + ['../' + texfile]
+fullbib = bibtexbase + [os.path.splitext(texfile)[0]]
 
 rv = subprocess.call(fullcmd)
 if rv != 0:
