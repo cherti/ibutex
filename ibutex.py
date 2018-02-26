@@ -2,7 +2,7 @@
 
 import os, argparse, glob, shutil, subprocess
 
-latexbase = ['lualatex', '-shell-escape']
+latexbase = ['lualatex']
 bibtexbase = ['bibtex']
 
 parser = argparse.ArgumentParser(description='IbuTex - LaTeX-tooling to reduce pain')
