@@ -1,5 +1,5 @@
 # ibutex
-## The LaTeX-Wrapper to reduce pain
+## A LaTeX-Wrapper to reduce pain
 
 While Latex is a very useful tool, it is commonly known to cause a not unsignificant amount of friction in its usage.
 To reduce that amount of friction, ibutex provides a wrapper around LaTeX
