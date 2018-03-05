@@ -7,10 +7,8 @@ bibtexbase = ['bibtex']
 
 parser = argparse.ArgumentParser(description='IbuTex - LaTeX-tooling to reduce pain')
 parser.add_argument('-c', '--clean', action="store_true", dest='cleanbuild', default=False, help='clean build, remove temporary and cached data before')
-parser.add_argument('-f', '--full', action="store_true", dest='full', default=False, help='full build, multiple runs of latex + bibtex')
-parser.add_argument('-m', '--material', action="store", dest='materialdir', default='img', help='directory containing material like images')
-parser.add_argument('-s', '--sections', action="store", dest='sectiondir', default='sections', help='directory containing sections or chapters if singled out')
-parser.add_argument('-b', '--bibfile', action="store", dest='bibfile', default='bibfile.bib', help='bibliography file')
+parser.add_argument('-i', '--include', type=str, metavar='file/dir', nargs='+', help='files or folder that need to be linked to the builddir')
+parser.add_argument('-q', '--quick', action="store_true", dest='quick', default=False, help='quick build, single run')
 parser.add_argument('--build-only', action="store_false", dest='showpdf', default=True, help='show the compiled documend afterwards')
 
 args = parser.parse_args()
@@ -34,12 +32,11 @@ if args.cleanbuild and os.path.exists('.texbuild'):
 
 os.makedirs('.texbuild', exist_ok=True)
 os.chdir('.texbuild')
-if not os.path.islink(args.materialdir):
-	os.symlink('../{}'.format(args.materialdir), args.materialdir)
-if args.sectiondir and not os.path.islink(args.sectiondir):
-	os.symlink('../{}'.format(args.sectiondir), args.sectiondir)
-if args.bibfile and not os.path.islink(args.bibfile):
-	os.symlink('../{}'.format(args.bibfile), args.bibfile)
+if not args.include is None:
+	for f in args.include:
+		if not os.path.exists(f):
+			path = os.path.realpath("../{}".format(f))
+			os.symlink(path, f)
 
 fullcmd = latexbase + ['../' + texfile]
 fullbib = bibtexbase + [os.path.splitext(texfile)[0]]
@@ -49,7 +46,7 @@ if rv != 0:
 	print(":: error compiling")
 	exit(1)
 
-if args.full:
+if not args.quick:
 	subprocess.call(fullbib)
 	subprocess.call(fullcmd)
 	subprocess.call(fullcmd)
