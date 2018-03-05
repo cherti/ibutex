@@ -12,3 +12,7 @@ This tool automatically builds latex documents based on latex and optionally bib
 
 It then builds your project in a `.texbuild-$name`-subfolder. This allows you to render multiple Latex documents (i.e. document as well as presentation) from the same set of graphics, for example.
 
+## License
+
+This works is released under the [GNU General Public License v3](https://www.gnu.org/licenses/gpl-3.0.txt). You can find a copy of this license at https://www.gnu.org/licenses/gpl-3.0.txt.
+
