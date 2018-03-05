@@ -8,7 +8,7 @@ This tool automatically builds latex documents based on latex and optionally bib
 
 ## Setting
 
-`ibutex` expects your main latex file to be in your base folder, all sections to be in a subfolder (default name `sections`) and all graphics and alike in a subfolder (default name `img`) as well.
+`ibutex` expects your main latex file to be in your base folder. Things that are needed for compilation (folders with sections or graphics, bibfile(s)) can be specified via `-i`/`--include` during the first run (or during cleanbuilds).
 
 It then builds your project in a `.texbuild-$name`-subfolder. This allows you to render multiple Latex documents (i.e. document as well as presentation) from the same set of graphics, for example.
 
