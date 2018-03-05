@@ -29,8 +29,8 @@ else:
 if len(texfiles) < 1:
 	print(':: no *.tex-files found for compilation')
 
-if args.cleanbuild:
-	os.remove('.texbuild')
+if args.cleanbuild and os.path.exists('.texbuild'):
+	shutil.rmtree('.texbuild')
 
 os.makedirs('.texbuild', exist_ok=True)
 os.chdir('.texbuild')
