@@ -20,7 +20,7 @@ if len(texfiles) > 1:
 	for i, v in enumerate(texfiles):
 		print('    {}: {}'.format(i, v))
 	selection = int(input('  Select:'))
-	texfile = texfiles[i]
+	texfile = texfiles[selection]
 else:
 	texfile = texfiles[0]
 
