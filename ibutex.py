@@ -9,11 +9,13 @@ parser.add_argument('-i', '--include', type=str, metavar='file/dir', nargs='+', 
 parser.add_argument('--build-only', action="store_false", dest='showpdf', default=True, help='show the compiled documend afterwards')
 parser.add_argument('-l', '--latexcmd', type=str, dest='latexcmd', default="lualatex", help='enter which latex compiler base command to use')
 parser.add_argument('-b', '--bibcmd', type=str, dest='bibcmd', default="bibtex", help='enter which bibliography backend to use')
+parser.add_argument('-v', '--viewcmd', type=str, dest='viewcmd', default="zathura", help='enter which bibliography backend to use')
 
 args = parser.parse_args()
 
 latexbase  = args.bibcmd.split()
 bibtexbase = args.latexcmd.split()
+viewcmd    = args.viewcmd.split()
 
 texfiles = glob.glob('*.tex')
 
@@ -68,4 +70,4 @@ pdffile = texfile[:-4] + '.pdf'
 shutil.copy(pdffile, '../' + pdffile)
 
 if args.showpdf:
-	subprocess.call(['zathura', pdffile])
+	subprocess.call(viewcmd + [pdffile])
