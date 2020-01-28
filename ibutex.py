@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import os, argparse, glob, shutil, subprocess
+import sys, os, argparse, glob, shutil, subprocess
 
 parser = argparse.ArgumentParser(description='IbuTex - LaTeX-tooling to reduce pain')
 parser.add_argument('-c', '--clean', action="store_true", dest='cleanbuild', default=False, help='clean build, remove temporary and cached data before')
@@ -17,18 +17,28 @@ bibtexbase = args.latexcmd.split()
 
 texfiles = glob.glob('*.tex')
 
+if len(texfiles) < 1:
+	print(':: no *.tex-files found for compilation', file=sys.stderr)
+	sys.exit(1)
+
 if len(texfiles) > 1:
 	print(':: Please select tex-file to compile:')
 	for i, v in enumerate(texfiles):
 		print('    {}: {}'.format(i, v))
-	selection = int(input('  Select:'))
-	texfile = texfiles[selection]
+	try:
+		selection = int(input('  Select:'))
+	except ValueError:
+		print(':: invalid input', file=sys.stderr)
+		sys.exit(2)
+
+	try:
+		texfile = texfiles[selection]
+	except KeyError:
+		print(':: non-existing selection', file=sys.stderr)
+		sys.exit(2)
 else:
 	texfile = texfiles[0]
 
-if len(texfiles) < 1:
-	print(':: no *.tex-files found for compilation')
-	sys.exit(1)
 
 if args.cleanbuild and os.path.exists('.texbuild'):
 	shutil.rmtree('.texbuild')
@@ -47,7 +57,7 @@ fullbib = bibtexbase + [os.path.splitext(texfile)[0]]
 rv = subprocess.call(fullcmd)
 if rv != 0:
 	print(":: error compiling")
-	exit(2)
+	sys.exit(3)
 
 if not args.quick:
 	subprocess.call(fullbib)
