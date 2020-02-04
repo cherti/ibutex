@@ -13,8 +13,8 @@ parser.add_argument('-v', '--viewcmd', type=str, dest='viewcmd', default="zathur
 
 args = parser.parse_args()
 
-latexbase  = args.bibcmd.split()
-bibtexbase = args.latexcmd.split()
+latexbase  = args.latexcmd.split()
+bibtexbase = args.bibcmd.split()
 viewcmd    = args.viewcmd.split()
 
 texfiles = glob.glob('*.tex')
