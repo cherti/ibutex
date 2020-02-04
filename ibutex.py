@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import sys, os, argparse, glob, shutil, subprocess
+import sys, os, argparse, glob, shutil, subprocess, re
 
 parser = argparse.ArgumentParser(description='IbuTex - LaTeX-tooling to reduce pain')
 parser.add_argument('-c', '--clean', action="store_true", dest='cleanbuild', default=False, help='clean build, remove temporary and cached data before')
@@ -10,12 +10,14 @@ parser.add_argument('--build-only', action="store_false", dest='showpdf', defaul
 parser.add_argument('-l', '--latexcmd', type=str, dest='latexcmd', default="lualatex", help='enter which latex compiler base command to use')
 parser.add_argument('-b', '--bibcmd', type=str, dest='bibcmd', default="bibtex", help='enter which bibliography backend to use')
 parser.add_argument('-v', '--viewcmd', type=str, dest='viewcmd', default="zathura", help='enter which bibliography backend to use')
+parser.add_argument('-s', '--spell-check', type=str, dest='spelling_lang', default=None, help='do a spell check on every tex file in build')
 
 args = parser.parse_args()
 
 latexbase  = args.latexcmd.split()
 bibtexbase = args.bibcmd.split()
 viewcmd    = args.viewcmd.split()
+spellcheckbase = ['aspell', '-t']
 
 texfiles = glob.glob('*.tex')
 
@@ -52,6 +54,31 @@ if not args.include is None:
 		if not os.path.exists(f):
 			path = os.path.realpath("../{}".format(f))
 			os.symlink(path, f)
+
+def get_inputs(root_tex_file):
+	results = []
+	with open(root_tex_file, "r") as f:
+		tex_data = f.read()
+		re_search = re.compile("\\\\input\\{(.*)\\}")
+		m = re_search.findall(tex_data)
+		for r in m:
+			if os.path.isfile(r+".tex"):
+				results.append(r+".tex")
+	return results
+
+inputs = [ "../"+texfile ]
+if not args.spelling_lang is None:
+	i = 0
+	while i < len(inputs):
+		for j in get_inputs(inputs[i]):
+			inputs.append(j)
+	i += 1
+
+for i in inputs:
+	check = subprocess.call(spellcheckbase + ['-l', args.spelling_lang, '-c', i])
+	if check != 0:
+		print(":: spell checking aborted, not compiling")
+		exit(1)
 
 fullcmd = latexbase + ['../' + texfile]
 fullbib = bibtexbase + [os.path.splitext(texfile)[0]]
