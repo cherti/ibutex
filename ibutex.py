@@ -69,7 +69,7 @@ if not args.quick:
 	if args.sagemath:
 		success = subprocess.call(fullsage)
 		if success != 0:
-			print(":: error running sagetex, aborting tex build!")
+			print(":: error running sagetex, aborting tex build")
 			sys.exit(4)
 	subprocess.call(fullcmd)
 	subprocess.call(fullcmd)
