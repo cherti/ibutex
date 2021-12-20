@@ -10,12 +10,14 @@ parser.add_argument('--build-only', action="store_false", dest='showpdf', defaul
 parser.add_argument('-l', '--latexcmd', type=str, dest='latexcmd', default="lualatex", help='enter which latex compiler base command to use')
 parser.add_argument('-b', '--bibcmd', type=str, dest='bibcmd', default="bibtex", help='enter which bibliography backend to use')
 parser.add_argument('-v', '--viewcmd', type=str, dest='viewcmd', default="zathura", help='enter which bibliography backend to use')
+parser.add_argument('--sage', action="store_true", dest='sagemath', default=False, help='enable running sage command to enable sagetex support')
 
 args = parser.parse_args()
 
 latexbase  = args.latexcmd.split()
 bibtexbase = args.bibcmd.split()
 viewcmd    = args.viewcmd.split()
+sagebase = ["sage"]
 
 texfiles = glob.glob('*.tex')
 
@@ -55,6 +57,7 @@ if not args.include is None:
 
 fullcmd = latexbase + ['../' + texfile]
 fullbib = bibtexbase + [os.path.splitext(texfile)[0]]
+fullsage =  sagebase + [texfile.replace("tex", "sagetex") + ".sage"]
 
 rv = subprocess.call(fullcmd)
 if rv != 0:
@@ -63,6 +66,11 @@ if rv != 0:
 
 if not args.quick:
 	subprocess.call(fullbib)
+	if args.sagemath:
+		success = subprocess.call(fullsage)
+		if success != 0:
+			print(":: error running sagetex, aborting tex build")
+			sys.exit(4)
 	subprocess.call(fullcmd)
 	subprocess.call(fullcmd)
 
