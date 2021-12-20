@@ -66,10 +66,14 @@ if rv != 0:
 
 if not args.quick:
 	subprocess.call(fullbib)
+	success = 0
 	if args.sagemath:
-		subprocess.call(fullsage)
-	subprocess.call(fullcmd)
-	subprocess.call(fullcmd)
+		success = subprocess.call(fullsage)
+	if success != 0:
+		print("error running sagetex, aborting tex build! …")
+	else:
+		subprocess.call(fullcmd)
+		subprocess.call(fullcmd)
 
 pdffile = texfile[:-4] + '.pdf'
 shutil.copy(pdffile, '../' + pdffile)
