@@ -10,7 +10,7 @@ parser.add_argument('--build-only', action="store_false", dest='showpdf', defaul
 parser.add_argument('-l', '--latexcmd', type=str, dest='latexcmd', default="lualatex", help='enter which latex compiler base command to use')
 parser.add_argument('-b', '--bibcmd', type=str, dest='bibcmd', default="bibtex", help='enter which bibliography backend to use')
 parser.add_argument('-v', '--viewcmd', type=str, dest='viewcmd', default="zathura", help='enter which bibliography backend to use')
-parser.add_argument('-m', '--sage', action="store_true", dest='sagemath', default=False, help='enable running sage command to enable sagetex support')
+parser.add_argument('--sage', action="store_true", dest='sagemath', default=False, help='enable running sage command to enable sagetex support')
 
 args = parser.parse_args()
 
