@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import sys, os, argparse, glob, shutil, subprocess, re
+import sys, os, argparse, glob, shutil, subprocess
 
 parser = argparse.ArgumentParser(description='IbuTex - LaTeX-tooling to reduce pain')
 parser.add_argument('-c', '--clean', action="store_true", dest='cleanbuild', default=False, help='clean build, remove temporary and cached data before')
@@ -69,7 +69,7 @@ if not args.quick:
 	if args.sagemath:
 		success = subprocess.call(fullsage)
 		if success != 0:
-			print("error running sagetex, aborting tex build! …")
+			print(":: error running sagetex, aborting tex build!")
 			sys.exit(4)
 	subprocess.call(fullcmd)
 	subprocess.call(fullcmd)
